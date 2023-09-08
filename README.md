@@ -1,6 +1,8 @@
 # Issues
 
-**TODO: Add description**
+This project can gather and display the latest issues for a given GitHub repository via a CLI. Created using Elixir and mix
+
+The project is a part of the book "Programming Elixir", writen by Dave Thomas of The Pragmatic Programmers
 
 ## Installation
 
