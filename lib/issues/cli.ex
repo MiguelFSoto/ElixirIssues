@@ -2,7 +2,7 @@ defmodule Issues.CLI do
     @moduledoc """
     Handling of command line arguments for the app
     """
-    
+    @defaultIssues 5
     def run(argv) do
         argv
         |> parse
@@ -18,7 +18,7 @@ defmodule Issues.CLI do
     def parse(argv) do
         argvParse = OptionParser.parse(argv, switches: [help: :boolean],
                                        aliases: [h: :help])
-        defaultIssues = 5
+        
         case argvParse do
             #Checks if help was called
             {[help: true], _, _} 
@@ -28,7 +28,7 @@ defmodule Issues.CLI do
                 -> {user, repo, String.to_integer(count)}
             #Gets arguments and defaults the number of issues
             {_, [user, repo], _}
-                -> {user, repo, defaultIssues}
+                -> {user, repo, @defaultIssues}
             #Defaults to help
             _ -> :help
         end
@@ -44,7 +44,7 @@ defmodule Issues.CLI do
 
     def process(:help) do
         IO.puts """
-        usage: issues <user> <project> [ count | #{@default_count} ]
+        usage: issues <user> <project> [ count | #{@defaultIssues} ]
         """
         System.halt(0)
     end
