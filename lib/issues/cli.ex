@@ -19,7 +19,7 @@ defmodule Issues.CLI do
                 -> :help
             #Gets passed arguments
             {_, [user, repo, count], _}
-                -> {user, repo, count}
+                -> {user, repo, String.to_integer(count)}
             #Gets arguments and defaults the number of issues
             {_, [user, repo], _}
                 -> {user, repo, defaultIssues}
