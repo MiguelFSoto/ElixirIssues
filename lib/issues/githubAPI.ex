@@ -16,13 +16,18 @@ defmodule Issues.GithubAPI do
     @doc """
     Generate github URL for the given project
     """
-    def getUrl(user repo), do 
-        "https://api.github.com/repos/#{user}/#{project}/issues"
+    def getUrl(user, repo) do 
+        "https://api.github.com/repos/#{user}/#{repo}/issues"
     end
 
     @doc """
     Read response status code to generate output atom
+    Decode json from the body
     """
-    def handleResponse(%{status_code: 200, body: body}), do: { :ok, body }
-    def handleResponse(%{status_code: ___, body: body}), do: { :error, body }
+    def handleResponse({:ok, %HTTPoison.Response{body: body}}) do 
+        { :ok, Jason.decode!(body) }
+    end
+    def handleResponse({:error, %HTTPoison.Error{reason: reason}}) do
+        { :error, Jason.decode!(reason) }
+    end
 end

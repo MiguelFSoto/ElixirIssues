@@ -41,15 +41,39 @@ defmodule Issues.CLI do
 
     Calls the API functionality for a normal set of inputs
     """
-
     def process(:help) do
         IO.puts """
         usage: issues <user> <project> [ count | #{@defaultIssues} ]
         """
         System.halt(0)
     end
-
     def process({user, repo, count}) do
         Issues.GithubIssues.fetch(user, repo)
+        |> decodeResponse
+        |> convertList
+        |> ascSort
     end
+
+    @doc """
+    Decode the response from the Github API based on status atom
+    """
+    def decodeResponse({:ok, body}) do
+        body
+    end
+    def decodeResponse({:error, error}) do
+        {_, message} = List.keyfind(error, "message", 0)
+        IO.puts "Error fetching from Github: #{message}"
+        System.halt(2)
+    end
+
+    def convertList(list) do
+        list
+        |> Enum.map(&Enum.into(&1, HashDict.new))
+    end
+    
+    def ascSort(list) do
+        Enum.sort list,
+        fn i1, i2 -> i1["created_at"] <= i2["created_at"] end
+    end
+
 end
