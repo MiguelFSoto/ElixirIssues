@@ -3,12 +3,12 @@ defmodule Issues.CLI do
     Handling of command line arguments for the app
     """
     @defaultIssues 5
-    def run(argv) do
+    def main(argv) do
         argv
         |> parse
         |> process
     end
-    
+
     @doc """
     Parses the CLI input
     argv can contain -h/--help for :help
@@ -18,10 +18,10 @@ defmodule Issues.CLI do
     def parse(argv) do
         argvParse = OptionParser.parse(argv, switches: [help: :boolean],
                                        aliases: [h: :help])
-        
+
         case argvParse do
             #Checks if help was called
-            {[help: true], _, _} 
+            {[help: true], _, _}
                 -> :help
             #Gets passed arguments
             {_, [user, repo, count], _}
@@ -72,7 +72,7 @@ defmodule Issues.CLI do
         list
         |> Enum.map(&Enum.into(&1, HashDict.new))
     end
-    
+
     def ascSort(list) do
         Enum.sort list,
         fn i1, i2 -> i1["created_at"] <= i2["created_at"] end
