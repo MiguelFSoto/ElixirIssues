@@ -48,10 +48,12 @@ defmodule Issues.CLI do
         System.halt(0)
     end
     def process({user, repo, count}) do
-        Issues.GithubIssues.fetch(user, repo)
+        Issues.GithubAPI.fetch(user, repo)
         |> decodeResponse
-        |> convertList
+        #|> convertList
         |> ascSort
+        |> Enum.take(count)
+        |> Issues.TableFormatter.printTable(["number", "created_at", "title"])
     end
 
     @doc """
@@ -75,5 +77,4 @@ defmodule Issues.CLI do
         Enum.sort list,
         fn i1, i2 -> i1["created_at"] <= i2["created_at"] end
     end
-
 end
